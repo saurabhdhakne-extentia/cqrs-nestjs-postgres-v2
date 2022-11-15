@@ -1,6 +1,8 @@
 import { Body, Controller, Get, HttpCode, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Patch } from '@nestjs/common/decorators';
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
 import { SavePersonCommand } from './commands/impl/save-person.command';
+import { UpdatePersonCommand } from './commands/impl/update-person.command';
 import { GetPersonsQuery } from './queries/impl/get-persons.query';
 
 @Controller('person')
@@ -19,10 +21,10 @@ export class PersonController {
         return await this.commandBus.execute(newPerson);
     }
 
-    @Put('update')
+    @Patch('update')
     @HttpCode(201)
     @UsePipes(new ValidationPipe({ transform: true }))
-    async updateEmployee(@Body() updatedPerson: SavePersonCommand) {
+    async updateEmployee(@Body() updatedPerson: UpdatePersonCommand) {
         return await this.commandBus.execute(updatedPerson);
     }
 
