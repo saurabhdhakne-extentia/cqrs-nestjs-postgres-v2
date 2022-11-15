@@ -6,10 +6,11 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { GetPersonsHandler } from './queries/handlers/get-persons.handler';
 import { SavePersonHandler } from './commands/handler/save-person.handler';
 import { updatePersonHandler } from './commands/handler/update-person.handler';
+import { DeletePersonHandler } from './commands/handler/delete-person.handler';
 
 @Module({
   imports: [CqrsModule, TypeOrmModule.forFeature([Person])],
   controllers: [PersonController],
-  providers: [GetPersonsHandler, SavePersonHandler, updatePersonHandler]
+  providers: [GetPersonsHandler, SavePersonHandler, updatePersonHandler, DeletePersonHandler],
 })
 export class PersonModule { }
