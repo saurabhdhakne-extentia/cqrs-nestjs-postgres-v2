@@ -1,4 +1,6 @@
 export class SavePersonCommand {
-    name: string;
-    age: number;
+    constructor(
+        public readonly name: string,
+        public readonly age: number,
+    ) { }
 }
