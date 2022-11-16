@@ -1,3 +1,5 @@
 export class DeletePersonCommand {
-    id: number;
+    constructor(
+        public readonly id: number,
+    ) { }
 }

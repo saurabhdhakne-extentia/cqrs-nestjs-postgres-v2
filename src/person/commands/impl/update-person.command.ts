@@ -1,5 +1,7 @@
 export class UpdatePersonCommand {
-    id: number;
-    name: string;
-    age: number;
+    constructor(
+        public readonly id: number,
+        public readonly name: string,
+        public readonly age: number,
+    ) { }
 }
