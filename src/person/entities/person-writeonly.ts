@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'person' })
-export class Person {
+export class PersonWriteonly {
     @PrimaryGeneratedColumn('increment', { name: 'id' })
     id: number;
 

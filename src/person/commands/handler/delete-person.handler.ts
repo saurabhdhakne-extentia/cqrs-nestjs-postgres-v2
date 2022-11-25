@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Person } from "../../entities/person";
+import { PersonWriteonly } from "../../entities/person-writeonly";
 import { DeletePersonCommand } from "../impl/delete-person.command";
 import {
     InternalServerErrorException,
@@ -9,11 +9,11 @@ import {
 @CommandHandler(DeletePersonCommand)
 export class DeletePersonHandler implements ICommandHandler<DeletePersonCommand> {
     constructor(
-        @InjectRepository(Person) private personRepo: Repository<Person>,
+        @InjectRepository(PersonWriteonly, 'secondaryDB') private personRepo: Repository<PersonWriteonly>,
     ) { }
     async execute(command: DeletePersonCommand) {
         try {
-            const person = new Person();
+            const person = new PersonWriteonly();
             person.id = command.id;
             await this.personRepo.delete(person);
         } catch (err) {

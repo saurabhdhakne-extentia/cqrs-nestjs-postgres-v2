@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Person } from "../../entities/person";
+import { PersonWriteonly } from "../../entities/person-writeonly";
 import { Repository } from "typeorm";
 import { SavePersonCommand } from "../impl/save-person.command";
 import {
@@ -10,19 +10,17 @@ import {
 export class SavePersonHandler implements ICommandHandler<SavePersonCommand> {
 
     constructor(
-        @InjectRepository(Person) private personRepo: Repository<Person>,
+        @InjectRepository(PersonWriteonly, 'secondaryDB') private personRepo: Repository<PersonWriteonly>,
     ) { }
     async execute(command: SavePersonCommand) {
         try {
-            var person = new Person();
+            var person = new PersonWriteonly();
             person.age = command.age;
             person.name = command.name;
             await this.personRepo.insert(person);
-
         } catch (err) {
             console.log(err);
             throw new InternalServerErrorException(err);
         }
-
     }
 }
