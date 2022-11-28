@@ -6,6 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Person } from './person/entities/person';
 import { PersonModule } from './person/person.module';
+require('dotenv').config();
+console.log(process.env.DATABASE_MAIN_HOST);
 
 @Module({
   imports: [
@@ -19,11 +21,11 @@ import { PersonModule } from './person/person.module';
       useFactory: async () => {
         return {
           type: 'postgres',
-          host: 'localhost',
+          host: process.env.DATABASE_MAIN_HOST,
           port: 5432,
-          database: 'cqrsdbv1',
-          username: 'postgres',
-          password: 'toor',
+          database: process.env.DATABASE_MAIN_DB_NAME,
+          username: process.env.DATABASE_MAIN_USERNAME,
+          password: process.env.DATABASE_MAIN_PASSWORD,
           entities: [Person],
           synchronize: false,
         };
@@ -34,21 +36,14 @@ import { PersonModule } from './person/person.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       name: 'secondaryDB',
-      useFactory: async (configService: ConfigService) => {
+      useFactory: async () => {
         return {
           type: 'postgres',
-          database: 'cqrsdbv2',
-          host: 'localhost',
+          host: process.env.DATABASE_SECONDARY_HOST,
+          database: process.env.DATABASE_SECONDARY_DB_NAME,
           port: 5432,
-          username: 'postgres',
-          password: 'toor',
-          authentication: {
-            type: 'default',
-            options: {
-              userName: 'postgres',
-              password: 'toor',
-            },
-          },
+          username: process.env.DATABASE_SECONDARY_USERNAME,
+          password: process.env.DATABASE_SECONDARY_PASSWORD,
           entities: [Person],
         };
       },
