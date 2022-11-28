@@ -9,7 +9,7 @@ import {
 @CommandHandler(DeletePersonCommand)
 export class DeletePersonHandler implements ICommandHandler<DeletePersonCommand> {
     constructor(
-        @InjectRepository(Person) private personRepo: Repository<Person>,
+        @InjectRepository(Person, 'secondaryDB') private personRepo: Repository<Person>,
     ) { }
     async execute(command: DeletePersonCommand) {
         try {

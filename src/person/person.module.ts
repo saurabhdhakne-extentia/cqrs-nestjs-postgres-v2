@@ -9,7 +9,7 @@ import { updatePersonHandler } from './commands/handler/update-person.handler';
 import { DeletePersonHandler } from './commands/handler/delete-person.handler';
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([Person])],
+  imports: [CqrsModule, TypeOrmModule.forFeature([Person]), TypeOrmModule.forFeature([Person], 'secondaryDB')],
   controllers: [PersonController],
   providers: [GetPersonsHandler, SavePersonHandler, updatePersonHandler, DeletePersonHandler],
 })

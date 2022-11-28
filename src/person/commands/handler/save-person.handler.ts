@@ -10,7 +10,7 @@ import {
 export class SavePersonHandler implements ICommandHandler<SavePersonCommand> {
 
     constructor(
-        @InjectRepository(Person) private personRepo: Repository<Person>,
+        @InjectRepository(Person, 'secondaryDB') private personRepo: Repository<Person>,
     ) { }
     async execute(command: SavePersonCommand) {
         try {
