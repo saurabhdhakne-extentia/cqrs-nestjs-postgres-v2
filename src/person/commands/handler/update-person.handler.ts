@@ -11,7 +11,7 @@ import {
 export class updatePersonHandler implements ICommandHandler<UpdatePersonCommand> {
 
     constructor(
-        @InjectRepository(Person) private personRepo: Repository<Person>,
+        @InjectRepository(Person, 'secondaryDB') private personRepo: Repository<Person>,
     ) { }
     async execute(command: UpdatePersonCommand) {
         try {
