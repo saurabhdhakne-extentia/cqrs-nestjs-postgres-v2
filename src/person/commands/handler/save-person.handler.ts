@@ -18,7 +18,6 @@ export class SavePersonHandler implements ICommandHandler<SavePersonCommand> {
             person.age = command.age;
             person.name = command.name;
             await this.personRepo.insert(person);
-
         } catch (err) {
             console.log(err);
             throw new InternalServerErrorException(err);

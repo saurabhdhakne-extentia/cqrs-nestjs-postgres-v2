@@ -1,13 +1,16 @@
-import { Body, Controller, Get, HttpCode, Post, Delete, Patch, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Delete, Patch, UsePipes, ValidationPipe, InternalServerErrorException } from '@nestjs/common';
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
 import { DeletePersonCommand } from './commands/impl/delete-person.command';
 import { SavePersonCommand } from './commands/impl/save-person.command';
 import { UpdatePersonCommand } from './commands/impl/update-person.command';
 import { GetPersonsQuery } from './queries/impl/get-persons.query';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { PersonAddEvent } from './event/person-add.event';
+import { PersonEventConstant } from './person.constant';
 
 @Controller('person')
 export class PersonController {
-    constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus) { }
+    constructor(private readonly queryBus: QueryBus, private readonly commandBus: CommandBus, private eventEmitter: EventEmitter2) { }
 
     @Get('all')
     async getAll() {
@@ -18,7 +21,21 @@ export class PersonController {
     @HttpCode(201)
     @UsePipes(new ValidationPipe({ transform: true }))
     async createEmployee(@Body() newPerson: SavePersonCommand) {
-        return await this.commandBus.execute(newPerson);
+        try {
+            const person = await this.commandBus.execute(newPerson);
+            const payload = new PersonAddEvent()
+            payload.personAge = newPerson.age;
+            payload.personName = newPerson.name;
+            this.eventEmitter.emit(
+                PersonEventConstant.PERSON_CREATED,
+                payload
+            );
+
+            return person;
+        } catch (err) {
+            console.log(err);
+            throw new InternalServerErrorException(err);
+        }
     }
 
     @Patch('update')
